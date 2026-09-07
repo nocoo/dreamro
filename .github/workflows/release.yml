@@ -1,0 +1,93 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to deploy (e.g. v1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: deploy-dreamro-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy verified Worker
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.head_repository.full_name == github.repository &&
+       (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment:
+      name: production
+      url: https://dreamro.hexly.ai
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - name: Checkout release commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || inputs.tag || github.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: npm
+      - name: Validate source and tag
+        run: node scripts/verify-deploy.mjs --source-only
+      - name: Install dependencies
+        run: npm ci
+      - name: Download assets verified by CI
+        if: github.event_name == 'workflow_run'
+        uses: actions/download-artifact@v4
+        with:
+          name: worker-dist
+          path: dist/
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - name: Install Chromium for a tagged release
+        if: github.event_name != 'workflow_run'
+        run: npx playwright install --with-deps chromium
+      - name: Verify and build a tagged release
+        if: github.event_name != 'workflow_run'
+        run: |
+          npm test
+          npm run build
+          npx wrangler deploy --dry-run
+      - name: Fetch current main
+        run: git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+      - name: Verify artifact and prevent stale main deployments
+        run: node scripts/verify-deploy.mjs
+      - name: Deploy Worker
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: npm
+          wranglerVersion: '4.129.0'
+          command: deploy
+      - name: Verify live version, assets, and SPA routing
+        run: npm run verify:release
+      - name: Upload browser failure details
+        if: failure() && github.event_name != 'workflow_run'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-browser-failures
+          path: test-results/
+          retention-days: 7
