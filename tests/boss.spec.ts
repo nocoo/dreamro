@@ -43,7 +43,7 @@ for (const job of ['swordsman', 'archer']) {
     }
     expect(health[0]).toBeLessThan(720);
     for (let i = 1; i < health.length; i++) expect(health[i]).toBeLessThanOrEqual(health[i - 1]);
-    await expect.poll(() => page.evaluate(() => window.__dreamro.game.target.returning), { timeout: 12_000 }).toBe(false);
+    await expect.poll(() => page.evaluate(() => window.__dreamro.game.target.returning), { timeout: process.env.CI ? 30_000 : 12_000 }).toBe(false);
     // Continue using actual controls: basic attacks, skills, and potions.
     for (let n = 0; n < 35; n++) {
       if (await page.evaluate(() => window.__dreamro.game.hero.bossDefeated)) break;

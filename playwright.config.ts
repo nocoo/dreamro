@@ -6,11 +6,13 @@ export default defineConfig({
   expect: { timeout: 15_000 },
   fullyParallel: false,
   workers: 1,
+  maxFailures: process.env.CI ? 1 : undefined,
   reporter: [['list']],
   use: {
     baseURL: 'http://127.0.0.1:5188',
     // Keep a desktop layout while limiting pixel work on CI's software renderer.
     viewport: process.env.CI ? { width: 1100, height: 720 } : { width: 1440, height: 900 },
+    deviceScaleFactor: process.env.CI ? .5 : 1,
     channel: 'chromium',
     launchOptions: { args: process.platform === 'darwin' ? ['--use-angle=metal', '--enable-webgl', '--ignore-gpu-blocklist'] : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--disable-dev-shm-usage'] },
     storageState: process.env.CI ? {

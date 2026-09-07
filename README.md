@@ -139,7 +139,7 @@ npm test
 npm run build
 ```
 
-浏览器测试使用独立的 `5188` 端口和隔离的存档。失败时会保存截图和 trace；GitHub Actions 会保留这些产物供排查。Linux CI 使用 Chromium 软件渲染与流畅画质。
+浏览器测试使用独立的 `5188` 端口和隔离的存档。失败时会保存截图和 trace；GitHub Actions 会停止后续用例并保留这些产物供排查。Linux CI 使用 Chromium 软件渲染、流畅画质和较低像素倍率，以控制三维测试的耗时。
 
 ## 文档
 
