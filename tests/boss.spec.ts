@@ -29,12 +29,9 @@ for (const job of ['swordsman', 'archer']) {
       g.player.group.position.set(b.spawn.x, g.world.walkHeight(b.spawn.x, 5.4), 5.4);
       g.updateCamera(.1, true);
     });
-    await page.waitForTimeout(100);
-    const point = await page.evaluate(() => {
-      const g = window.__dreamro.game;
-      return g.project(g.enemies.find((e: any) => e.boss).position.clone().add({ x: 0, y: 1.6, z: 0 }));
-    });
-    await page.mouse.click(point.x, point.y);
+    // Target through the real keyboard control; a projected click can use stale
+    // mesh transforms immediately after this fixture teleports the queen.
+    await page.keyboard.press('Space');
     await expect.poll(() => page.evaluate(() => window.__dreamro.game.target?.boss)).toBe(true);
     await expect.poll(() => page.evaluate(() => window.__dreamro.game.target.hp)).toBeLessThan(720);
     await expect(page.locator('#target-level')).toHaveText('返回领地');

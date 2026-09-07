@@ -9,7 +9,8 @@ async function start(page: Page, job = 'archer', name = '夏日旅人') {
   await page.locator('.begin-button').click();
   await expect(page.locator('#app')).toHaveClass('playing');
   await expect.poll(() => page.evaluate(() => Boolean(window.__dreamro.game))).toBe(true);
-  await page.waitForTimeout(250);
+  await expect.poll(() => page.evaluate(() => window.__dreamro.game.time)).toBeGreaterThan(.1);
+  await expect(page.locator('#scene canvas')).toBeFocused();
 }
 
 async function walkByMap(page: Page, x: number, z: number) {
@@ -90,13 +91,15 @@ test('all 20 professions have a working animated preview, and names are validate
 });
 
 test('a complete adventure: combat, rewards, bridges, three maps, the queen, and persistence', async ({ page }) => {
-  test.setTimeout(180_000);
+  test.setTimeout(process.env.CI ? 360_000 : 180_000);
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
   page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
   await start(page);
   const origin = await page.evaluate(() => window.__dreamro.game.player.group.position.toArray());
-  await page.keyboard.down('w'); await page.waitForTimeout(400); await page.keyboard.up('w');
-  expect(await page.evaluate(() => window.__dreamro.game.player.group.position.toArray())).not.toEqual(origin);
+  await page.keyboard.down('w');
+  try {
+    await expect.poll(() => page.evaluate(() => window.__dreamro.game.player.group.position.z)).toBeLessThan(origin[2] - .5);
+  } finally { await page.keyboard.up('w'); }
   await page.screenshot({ path: 'output/screenshots/valley-final.png' });
 
   for (let count = 1; count <= 5; count++) {
@@ -255,10 +258,15 @@ test('corrupted storage and untrusted character names are handled without execut
   await page.reload(); await expect(page.locator('[data-job]')).toHaveCount(7);
   await page.locator('#hero-name').fill('正常名字'); await page.locator('.begin-button').click();
   await expect(page.locator('#app')).toHaveClass('playing');
+  // Dispose the active game before altering its saved ID; blur and autosave
+  // would otherwise add the live character back alongside the deliberate fixture.
+  await page.keyboard.press('Escape');
+  await page.locator('[data-action="return-creation"]').click();
+  await expect(page.locator('#app')).toHaveClass('creating');
   await page.evaluate(() => { const key = 'dreamro.adventurers.v1'; const saves = JSON.parse(localStorage.getItem(key)!); saves[0].name = '<img src=x>'; saves[0].id = 'saved" onclick="window.__unsafeName = true'; saves[0].hp = null; saves[0].level = -20; localStorage.setItem(key, JSON.stringify(saves)); });
-  // Navigate to a fresh document without the old game's unload save replacing this deliberate fixture.
   const second = await page.context().newPage(); await second.goto('/');
   await second.locator('[data-action="characters"]').click();
+  await expect(second.locator('.saved-character')).toHaveCount(1);
   await expect(second.locator('.saved-character img')).toHaveCount(0);
   await expect(second.locator('.saved-character strong')).toContainText('<img src=x>');
   await expect(second.locator('.saved-character')).not.toHaveAttribute('onclick');
@@ -268,6 +276,8 @@ test('corrupted storage and untrusted character names are handled without execut
 });
 
 test('all 80 profession skills affect combat, including healing, poison, fields, and companions', async ({ page }) => {
+  // This scenario creates 20 worlds and exercises 80 skills using real controls.
+  test.setTimeout(process.env.CI ? 360_000 : 180_000);
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
   await page.goto('/');
   const jobs = await page.evaluate(() => window.__dreamro.jobs.map((j: any) => ({ id: j.id, name: j.name, advanced: j.advanced })));
