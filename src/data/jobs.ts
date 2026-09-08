@@ -131,6 +131,5 @@ export const JOBS: Job[] = [
 
 export const JOB_BY_ID = new Map(JOBS.map(job => [job.id, job]));
 export const HAIR_COLORS = ['#805339', '#d8ae69', '#b66858', '#777293', '#d9d7c6', '#465a65'];
-export const FAMILIES: Record<Family, string> = { novice: '初心', swordsman: '剑士系', mage: '法师系', archer: '弓手系', acolyte: '服事系', merchant: '商人系', thief: '盗贼系' };
 
 export function getJob(id: string): Job { return JOB_BY_ID.get(id) ?? JOBS[1]; }

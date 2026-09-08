@@ -46,14 +46,10 @@ const paths: Record<string, string> = {
   heart: '<path d="M12 21 3 12C-2 5 7-1 12 6c5-7 14-1 9 6Z"/>',
   potion: '<path d="M9 2h6v6c9 6 7 14-3 14S0 14 9 8V2Zm-1 2h8M6 14h12"/><path d="m10 16 3 3"/>',
   chest: '<path d="M3 11V7c0-6 18-6 18 0v4M3 11h18v10H3V11Zm6 0v5h6v-5M5 4v7m14-7v7"/>',
-  flag: '<path d="M5 22V3c5-4 9 4 15 0v10c-6 4-10-4-15 0"/>',
   expand: '<path d="M3 9V3h6m6 0h6v6m0 6v6h-6M3 15v6h6"/>',
   minus: '<path d="M5 12h14"/>',
   plus: '<path d="M5 12h14M12 5v14"/>',
   leaf: '<path d="M4 20C-2 5 9 2 22 2c0 14-4 20-18 18ZM4 20 17 7M9 15v-5m0 5h5"/>',
-  home: '<path d="M2 11 12 2l10 9M5 9v13h14V9M9 22v-8h6v8"/>',
-  pause: '<path d="M7 4v16M17 4v16" stroke-width="4"/>',
-  play: '<path d="m7 3 14 9-14 9Z"/>',
   save: '<path d="M3 3h15l3 3v15H3V3ZM7 3v6h10V3M7 21v-8h10v8"/>',
 };
 
