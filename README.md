@@ -2,154 +2,116 @@
 
 <h1 align="center">DreamRO</h1>
 
+<p align="center">创建角色、探索山谷，在浏览器中完成一段 RO 风格的单人冒险。</p>
+
 <p align="center">
-  <strong>仙境之梦，一段可以在浏览器里重逢的冒险</strong><br>
-  创建角色 · 探索山谷 · 挑战女王 · 收藏旅途
+  <a href="https://dreamro.hexly.ai">站点</a> ·
+  <a href="docs/README.en.md">English</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/nocoo/dreamro/actions/workflows/ci.yml"><img src="https://github.com/nocoo/dreamro/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
-  <img src="https://img.shields.io/badge/TypeScript-5.9-3178c6?logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Three.js-0.180-000000?logo=threedotjs&logoColor=white" alt="Three.js" />
-  <img src="https://img.shields.io/badge/Vite-7-646cff?logo=vite&logoColor=white" alt="Vite" />
-  <img src="https://img.shields.io/badge/Playwright-10_E2E_tests-2ead33" alt="10 browser tests" />
-  <img src="https://img.shields.io/badge/Cloudflare-Workers-f38020?logo=cloudflare&logoColor=white" alt="Cloudflare Workers" />
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License" /></a>
+  <img src="preview.jpg" width="720" alt="DreamRO 晨曦山谷中的旅人与波利" />
 </p>
-
-<p align="center">
-  <a href="https://dreamro.hexly.ai"><img src="preview.jpg" width="720" alt="DreamRO 的晨曦山谷，旅人与波利的三维世界" /></a>
-</p>
-
----
 
 ## 这是什么
 
-DreamRO（仙境之梦）是一款致敬经典 RO 的单人网页 RPG。选择一个职业，走过晨曦山谷、萤语森林与星落遗迹，与波利战斗，完成三章故事。
+DreamRO（仙境之梦）是一款致敬 Ragnarok Online 的单人网页 RPG。选择职业与外观，从晨曦山谷走到萤语森林和星落遗迹，完成向导任务并挑战波利女王。
 
-角色、装备、三维场景、动画与音效主要由代码生成，搭配原创幻想插画和经典窗口式界面。进度保存在当前浏览器，随时可以回来接着玩。
-
-线上：[dreamro.hexly.ai](https://dreamro.hexly.ai)
+游戏使用 Three.js 构建三维场景、角色和装备，配合窗口式界面、幻想插画和 Web Audio 合成声音。游戏逻辑与进度都在浏览器运行；当前没有云端账号、存档同步或多人联机。
 
 ## 功能
 
-- **20 种职业** — 初心者、六大基础职业系与十三种进阶职业；80 个技能配置，支持近战、远程、魔法、治疗、护盾、冲刺、持续伤害与召唤。
-- **三章冒险** — 三张相连的 3D 地图，包含村落、溪流、桥梁、森林与女王竞技场；完成向导任务，获得永久波利伙伴。
-- **成长与收集** — 战斗升级、自动拾取、药水商店、宝箱、生命卡片和武器强化；倒地后可回到入口继续旅程。
-- **自然动画** — 角色呼吸、眨眼、行走、挥武器和施法；波利弹跳、受击与消散，配合法阵、粒子、水流和萤火。
-- **经典界面** — 小地图、状态栏、技能快捷栏、背包、角色属性、任务手札，以及可以点击寻路的大地图。
-- **桌面与触屏** — 键鼠操作、触屏摇杆、可旋转缩放的镜头、两档画质、原创程序化音乐与音效。
+- 直接创建初心者、基础职业与进阶职业，每个职业有四个技能，覆盖近战、远程、治疗、护盾、持续伤害、范围法术与召唤。
+- 探索三张相连地图，通过地面或大地图点击寻路，完成顺序任务并获得永久波利伙伴。
+- 战斗升级、自动拾取、药水商店、宝箱、生命卡片与武器强化；倒地后保留等级、背包和任务进度。
+- 通过状态栏、技能栏、背包、角色属性、任务手札和小地图查看当前状态。
+- 支持键鼠与触屏摇杆、镜头旋转缩放、两档画质，以及独立的音乐、音效和音量设置。
 
-## 安装
+角色呼吸、行走与攻击，波利跳跃、受击和消散，法阵与粒子效果均由代码驱动。美术、字体与设计参考见[素材说明](CREDITS.md)。
 
-无需安装，使用支持 WebGL 2 的现代浏览器打开[游戏](https://dreamro.hexly.ai)。输入名字、选择职业、调整发色和发型，点击「启程，去冒险」。所有职业都可以直接创建。
+## 使用
 
-存档按浏览器和访问地址分别保存。再次打开游戏时，从「继续旅途」选择角色；更换设备或清理站点数据前，请留意本地存档不会自动同步。
+使用支持 WebGL 2、已开启硬件加速的现代浏览器打开[游戏](https://dreamro.hexly.ai)。输入名字、选择职业并调整外观，点击「启程，去冒险」。基础和进阶职业都可直接选择，不需要先完成转职任务。
 
-## 操作一览
+每个角色有独立进度，存于当前访问地址的 localStorage。再次打开时从「继续旅途」选择角色；游戏会自动保存，设置中也可手动保存。不同域名、浏览器和设备不共享存档，清理站点数据会移除本地进度。
 
 | 操作 | 按键或手势 |
 | --- | --- |
-| 行走 | `WASD` / 方向键 / 触屏摇杆 |
-| 自动寻路 | 点击地面，或在大地图中点击目的地 |
-| 选择魔物并自动攻击 | 点击魔物 / `Space` / 触屏攻击按钮 |
-| 职业技能 | `1`–`4` / 点击技能栏 |
-| 红色药水 / 蓝色药水 | `Q` / `E` |
-| 交谈、打开宝箱 | 靠近后按 `F` / 点击交互提示 |
-| 切换目标 | `Tab` |
-| 旋转、缩放、重置镜头 | 鼠标右键拖动 / 滚轮 / `R` |
-| 背包、角色、手札、地图 | `I` / `C` / `J` / `M` |
-| 设置、关闭窗口 | `Esc` |
+| 行走 | WASD / 方向键 / 触屏摇杆 |
+| 自动寻路 | 点击地面或大地图目的地 |
+| 选择魔物并自动攻击 | 点击魔物 / Space / 触屏攻击按钮 |
+| 职业技能 | 1–4 / 点击技能栏 |
+| 红色药水 / 蓝色药水 | Q / E |
+| 交谈、打开宝箱 | 靠近后按 F / 点击交互提示 |
+| 切换目标 | Tab |
+| 旋转、缩放、重置镜头 | 鼠标右键拖动 / 滚轮 / R |
+| 背包、角色、手札、地图 | I / C / J / M |
+| 设置、关闭窗口 | Esc |
 
-打开窗口时战斗会暂停。离开战斗后会逐渐恢复生命和 SP，升级会完全恢复。女王施法时，走出地面的预警光圈可以躲避冲击。
-
-## 项目结构
-
-```text
-.github/workflows/
-  ci.yml                  # 浏览器测试、类型检查、构建与打包
-  release.yml             # CI 通过后部署、标签发布与版本核验
-src/
-  data/jobs.ts            # 20 种职业与 80 个技能配置
-  game/
-    Character.ts          # 角色、装备、波利与动画
-    World.ts              # 三张地图、地形和碰撞
-    Game.ts               # 战斗、怪物、任务与移动
-    Effects.ts            # 法阵、粒子与技能特效
-    pathfinding.ts        # A* 寻路
-    state.ts              # 成长数值与本地存档
-    Audio.ts              # Web Audio 音乐与音效
-  ui/HUD.ts               # 游戏窗口、小地图与触屏操作
-  main.ts                 # 角色创建与应用生命周期
-public/                   # 本地插画、字体与缓存配置
-scripts/                  # 构建版本记录与发布核验
-tests/                    # 冒险流程、职业、Boss 与渲染回归
-docs/                     # 玩法与部署说明
-wrangler.jsonc            # Cloudflare Workers 静态资源和域名
-```
-
-## 技术栈
-
-| 层 | 技术 |
-| --- | --- |
-| 语言 | [TypeScript](https://www.typescriptlang.org/) |
-| 三维渲染 | [Three.js](https://threejs.org/) / WebGL 2 |
-| 构建 | [Vite](https://vite.dev/) |
-| 音频与存档 | [Web Audio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) / [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) |
-| 浏览器验证 | [Playwright](https://playwright.dev/) |
-| 发布 | [GitHub Actions](https://docs.github.com/en/actions) / [Cloudflare Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/) |
+打开游戏窗口会暂停战斗。移动可取消自动攻击，便于躲避女王的地面预警范围。设备发热或帧率偏低时，可在设置中选择「流畅」画质；完整任务与成长规则见[玩法说明](docs/gameplay.md)。
 
 ## 开发
 
-需要 Node.js 22.12 或更新版本，以及支持 WebGL 2 的浏览器。
+使用 Node.js 22.12 或更新版本与 npm；浏览器需要 WebGL 2。
 
-```sh
+```bash
 git clone https://github.com/nocoo/dreamro.git
 cd dreamro
 npm ci
 npm run dev
 ```
 
-打开终端显示的地址。Vite 默认使用 `5173`，端口被占用时会自动选择下一个；也可以使用 `npm run dev -- --port 5174`。
+Vite 默认使用 5173，端口占用时自动选择下一个，访问终端显示的地址。可以用 `npm run dev -- --port 5174` 指定端口；不同端口也会使用不同的浏览器存档。
 
-| 命令 | 说明 |
+```bash
+npm run typecheck
+npm run build
+npm run preview
+```
+
+构建结果位于 `dist/`，附带当前版本与提交信息。应用没有必需的服务端凭据或数据库；Cloudflare Workers Static Assets 托管配置见 [wrangler.jsonc](wrangler.jsonc)，自行部署步骤见[部署说明](docs/deployment.md)。
+
+| 路径 | 内容 |
 | --- | --- |
-| `npm run dev` | 启动 Vite 开发服务 |
-| `npm run typecheck` | TypeScript 类型检查 |
-| `npm test` | 运行全部浏览器测试 |
-| `npm run build` | 类型检查、生产构建与版本记录 |
-| `npm run preview` | 预览生产构建 |
-| `npm run deploy:check` | 构建并执行 Wrangler 发布演练 |
-| `npm run preview:worker` | 使用本地 Workers 运行时预览，端口 `8787` |
-| `npm run verify:release` | 检查线上提交、版本、资源与 SPA 路由 |
-
-正式发布通过 [Release workflow](https://github.com/nocoo/dreamro/actions/workflows/release.yml) 完成：`main` 的 CI 通过后自动发布，标签和手动发布会先重新执行检查。部署配置见[部署文档](docs/deployment.md)。
+| `src/data/jobs.ts` | 职业、属性与技能配置 |
+| `src/game` | 三维角色、地图、战斗、A* 寻路、音频与存档 |
+| `src/main.ts`、`src/ui` | 角色创建、应用生命周期、窗口与触屏操作 |
+| `public` | 插画、本地字体和缓存配置 |
+| `tests` | 浏览器冒险流程、职业、Boss 与渲染回归 |
 
 ## 测试
 
-| 层 | 内容 | 触发时机 |
-| --- | --- | --- |
-| 冒险与职业 | 角色创建、20 职业 / 80 技能、三章通关、地图切换、存档、复活和触屏 | `npm test` / CI |
-| Boss 回归 | 近战与远程追击、返回领地、持续伤害、女王击败、竞技场高度关系 | `npm test` / CI |
-| 构建与发布 | 类型检查、Worker 打包、提交和版本匹配、线上资源与 SPA 路由 | CI / Release |
-
-```sh
+```bash
 npx playwright install chromium
 npm test
-npm run build
 ```
 
-浏览器测试使用独立的 `5188` 端口和隔离的存档。失败时会保存截图和 trace；GitHub Actions 会停止后续用例并保留这些产物供排查。Linux CI 使用 Chromium 软件渲染、流畅画质和较低像素倍率，以控制三维测试的耗时。
+Playwright 自动启动独立开发服务，使用 `127.0.0.1:5188` 和隔离浏览器存档。运行前确保该端口空闲，避免复用无关服务；Linux 环境可用 `npx playwright install --with-deps chromium` 安装浏览器依赖。
+
+当前测试覆盖角色创建、职业技能、地图任务、女王战、存档、复活和触屏操作。测试配置在 macOS 使用 Metal，在 Linux 使用 Chromium 软件渲染；失败时保留截图与 trace。仓库没有独立的单元或服务端 API 测试命令，类型检查与构建使用开发章节中的命令。
+
+## 技术栈
+
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Three.js](https://img.shields.io/badge/Three.js-000000?logo=threedotjs&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
+![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-F38020?logo=cloudflare&logoColor=white)
+
+| 部分 | 实现 |
+| --- | --- |
+| 游戏与界面 | TypeScript、DOM、CSS、SVG |
+| 三维渲染 | Three.js、WebGL 2、Canvas 纹理 |
+| 音频与进度 | Web Audio、localStorage |
+| 构建与托管 | Vite、Cloudflare Workers Static Assets |
+| 浏览器测试 | Playwright |
 
 ## 文档
 
-| 文档 | 内容 |
-| --- | --- |
-| [玩法说明](docs/gameplay.md) | 职业、任务、女王战、成长与存档 |
-| [部署说明](docs/deployment.md) | Cloudflare 配置、GitHub Secrets、CI/CD 与版本发布 |
-| [素材与参考](CREDITS.md) | 原创素材、设计参考和字体授权 |
-| [更新记录](CHANGELOG.md) | 已发布版本 |
+- [玩法说明](docs/gameplay.md)
+- [部署说明](docs/deployment.md)
+- [素材与参考](CREDITS.md)
+- [变更记录](CHANGELOG.md)
 
-## License
+## 许可证
 
-[MIT](LICENSE) © 2026
+[MIT](LICENSE) © 2026 Zheng Li。随应用分发的 Cinzel 与 Cormorant Garamond 字体采用 SIL Open Font License，详见[素材与参考](CREDITS.md)。DreamRO 是独立致敬作品；Ragnarok Online / RO 名称与相关标识属于其各自权利人。
