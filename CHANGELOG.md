@@ -1,5 +1,9 @@
 # 更新记录
 
+## v1.0.1 — 2026-09-11
+
+- 生产环境提供 `GET /api/live` 静态 JSON（`status`、`version`），`Cache-Control: no-store`。
+
 ## v1.0.0 — 2026-09-07
 
 - 首次发布 DreamRO，包含角色创建、20 种职业、80 个技能配置和三章单人冒险。
