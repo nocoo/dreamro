@@ -3,8 +3,10 @@
   "name": "dreamro",
   "account_id": "d51a8fde361e4be31db17d8c56737c1f",
   "compatibility_date": "2026-09-01",
+  "main": "worker.js",
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
     "not_found_handling": "single-page-application"
   },
   "routes": [
