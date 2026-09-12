@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   quality:
-    uses: nocoo/base-ci/.github/workflows/quality.yml@3d2e9e55fdd60aa756df454ded53ef6d06d6653f
+    uses: nocoo/base-ci/.github/workflows/quality.yml@2857469cc5206e7a4988171a1282209617996a67
     with:
       package-manager: npm
       node-version: "22.12.0"
@@ -26,11 +26,19 @@ jobs:
       lint: false
       unit: false
       security: false
-      disabled-check-reasons: '{"typecheck":"tsc --noEmit runs inside npm run build","lint":"project has no lint script","unit":"Playwright browser suite is the test gate","security":"previous CI had no gitleaks/osv jobs"}'
+      disabled-check-reasons: |-
+        {
+          "typecheck": "tsc --noEmit runs inside npm run build",
+          "lint": "project has no lint script",
+          "unit": "Playwright browser suite is the test gate",
+          "security": "previous CI had no gitleaks/osv jobs"
+        }
       l3: true
       l3-command: "npm test"
       l3-browser: "chromium"
       build: true
-      build-command: "npm run build && ./node_modules/.bin/wrangler deploy --dry-run"
+      build-command: |
+        npm run build
+        ./node_modules/.bin/wrangler deploy --dry-run
       artifact-name: worker-dist
       artifact-paths: dist/
