@@ -66,7 +66,7 @@ jobs:
           install-policy: "project"
 
       - name: Download CI-verified Worker assets
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: worker-dist
           path: dist/
@@ -100,6 +100,19 @@ jobs:
           bin=./node_modules/.bin/wrangler
           test -x "$bin"
           "$bin" --version | grep -E '4\.129\.0'
+
+      - name: Recheck release-source freshness
+        uses: nocoo/base-ci/.github/actions/release-source@8cbdb970c3a38240289c1e152c40dd550ac62dba
+        with:
+          github-token: ${{ github.token }}
+          expected-workflow-path: ".github/workflows/ci.yml"
+          expected-workflow-name: "CI"
+          source-run-id: ${{ steps.source.outputs.source-run-id }}
+          source-sha: ${{ steps.source.outputs.target-sha }}
+          allowed-source-events: "push,workflow_dispatch"
+          package-version-match: ${{ github.event_name != 'workflow_run' }}
+          require-fresh-main: true
+          tag: ${{ github.event_name == 'push' && github.ref_name || inputs.tag || '' }}
 
       - name: Deploy Worker
         env:

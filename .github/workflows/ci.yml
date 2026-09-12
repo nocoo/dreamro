@@ -16,29 +16,17 @@ concurrency:
 
 jobs:
   quality:
-    uses: nocoo/base-ci/.github/workflows/quality.yml@ad43150de3a2be2fa464b5cd2f921dc4fa9f8f0f
+    uses: nocoo/base-ci/.github/workflows/test-job.yml@ad43150de3a2be2fa464b5cd2f921dc4fa9f8f0f
     with:
-      package-manager: npm
+      runtime: npm
       node-version: "22.12.0"
-      runtime-version: "11.19.1"
       install-policy: "project"
-      typecheck: false
-      lint: false
-      unit: false
-      security: false
-      disabled-check-reasons: |-
-        {
-          "typecheck": "tsc --noEmit runs inside npm run build",
-          "lint": "project has no lint script",
-          "unit": "Playwright browser suite is the test gate",
-          "security": "previous CI had no gitleaks/osv jobs"
-        }
-      l3: true
-      l3-command: "npm test"
-      l3-browser: "chromium"
-      build: true
-      build-command: |
+      timeout-minutes: 20
+      browser: chromium
+      pre-command: |
         npm run build
         ./node_modules/.bin/wrangler deploy --dry-run
+      command: npm test
       artifact-name: worker-dist
-      artifact-paths: dist/
+      artifact-path: dist/
+      artifact-retention-days: 14
