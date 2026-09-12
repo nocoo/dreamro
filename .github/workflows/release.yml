@@ -36,58 +36,76 @@ jobs:
     environment:
       name: production
       url: https://dreamro.hexly.ai
-    env:
-      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
     steps:
-      - name: Checkout release commit
-        uses: actions/checkout@v4
+      - name: Resolve release source
+        id: source
+        uses: nocoo/base-ci/.github/actions/release-source@8cbdb970c3a38240289c1e152c40dd550ac62dba
         with:
-          ref: ${{ github.event.workflow_run.head_sha || inputs.tag || github.ref }}
+          github-token: ${{ github.token }}
+          expected-workflow-path: ".github/workflows/ci.yml"
+          expected-workflow-name: "CI"
+          source-run-id: ${{ github.event_name == 'workflow_run' && format('{0}', github.event.workflow_run.id) || '' }}
+          tag: ${{ github.event_name == 'push' && github.ref_name || inputs.tag || '' }}
+          allowed-source-events: "push,workflow_dispatch"
+          package-version-match: ${{ github.event_name != 'workflow_run' }}
+          require-fresh-main: true
+
+      - name: Checkout proven SHA
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.source.outputs.target-sha }}
           fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-node@v4
+
+      - name: Setup JS and frozen install
+        uses: nocoo/base-ci/.github/actions/setup-js@081cdf665b9c67f233abfcc9242ce0be76ce2bb4
         with:
-          node-version: '22.12.0'
-          cache: npm
-      - name: Validate source and tag
-        run: node scripts/verify-deploy.mjs --source-only
-      - name: Install dependencies
-        run: npm ci
-      - name: Download assets verified by CI
-        if: github.event_name == 'workflow_run'
+          package-manager: npm
+          runtime-version: "11.19.1"
+          node-version: "22.12.0"
+          install-policy: "project"
+
+      - name: Download CI-verified Worker assets
         uses: actions/download-artifact@v4
         with:
           name: worker-dist
           path: dist/
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ steps.source.outputs.source-run-id }}
           github-token: ${{ github.token }}
-      - name: Install Chromium for a tagged release
-        if: github.event_name != 'workflow_run'
-        run: npx playwright install --with-deps chromium
-      - name: Verify and build a tagged release
-        if: github.event_name != 'workflow_run'
+
+      - name: Verify artifact belongs to the proven SHA
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag || '' }}
         run: |
-          npm test
-          npm run build
-          npx wrangler deploy --dry-run
-      - name: Fetch current main
-        run: git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
-      - name: Verify artifact and prevent stale main deployments
-        run: node scripts/verify-deploy.mjs
+          set -euo pipefail
+          test -f dist/build-info.json
+          node -e '
+            const assert = require("node:assert/strict");
+            const { execFileSync } = require("node:child_process");
+            const { readFileSync } = require("node:fs");
+            const commit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+            const { version } = JSON.parse(readFileSync("package.json", "utf8"));
+            const info = JSON.parse(readFileSync("dist/build-info.json", "utf8"));
+            assert.equal(info.name, "dreamro");
+            assert.equal(info.commit, commit, "Build artifact must belong to this commit");
+            assert.equal(info.version, version, "Build artifact must match the release version");
+            console.log("Verified DreamRO artifact", info);
+          '
+          git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          node scripts/verify-deploy.mjs --source-only
+
+      - name: Confirm locked Wrangler
+        run: |
+          set -euo pipefail
+          bin=./node_modules/.bin/wrangler
+          test -x "$bin"
+          "$bin" --version | grep -E '4\.129\.0'
+
       - name: Deploy Worker
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          packageManager: npm
-          wranglerVersion: '4.129.0'
-          command: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: ./node_modules/.bin/wrangler deploy
+
       - name: Verify live version, assets, and SPA routing
         run: npm run verify:release
-      - name: Upload browser failure details
-        if: failure() && github.event_name != 'workflow_run'
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-browser-failures
-          path: test-results/
-          retention-days: 7
