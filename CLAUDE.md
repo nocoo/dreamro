@@ -61,7 +61,7 @@ There is no `lint` or `test:coverage` script.
 ## Verification
 
 Status: `enforced` | `planned` | `manual` | `N/A`.
-6DQ = L1/L2/L3 + G1/G2 + D1. Required L1 bar is four metrics each ≥ 95%; no `.skip` / `.only`.
+6DQ = L1/L2/L3 + G1/G2 + D1. Required L1 bar is statements/branches/functions/lines each ≥95%; no skipped or focused tests.
 
 | Change | Proof | Status | Evidence |
 |---|---|---|---|
@@ -70,7 +70,7 @@ Status: `enforced` | `planned` | `manual` | `N/A`.
 | UI path | L3 Playwright | enforced | CI `command: npm test` after build + wrangler dry-run |
 | Types / lint | G1 0 error, 0 warning | planned | CI does not run `typecheck`; no lint script; no husky |
 | Deps / secrets | G2 osv-scanner + gitleaks | planned | CI uses `test-job.yml`, not quality.yml security |
-| Test isolation | D1 Playwright local Vite :5188; SQLite marker | N/A | No database. CI `storageState` only seeds `dreamro.preferences.v1` in origin 5188. No remote baseURL |
+| Test isolation | D1 fresh browser state on the local test server | planned | Playwright isolates contexts and seeds synthetic CI preferences at loopback :5188. Outside CI, `reuseExistingServer` may reuse the daily server; explicit test-server ownership remains a gap. SQLite/`_test_marker` are N/A because there is no database |
 | Bundler output | `npm run build` + wrangler dry-run | enforced | CI `pre-command` |
 | Docs | update gameplay/deploy docs if behavior changed | manual | human review |
 | Release | version + Worker deploy | enforced | `.github/workflows/release.yml` after green CI |
