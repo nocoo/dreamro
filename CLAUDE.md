@@ -70,12 +70,12 @@ Status: `enforced` | `planned` | `manual` | `N/A`.
 | UI path | L3 Playwright | enforced | CI `command: npm test` after build + wrangler dry-run |
 | Types / lint | G1 0 error, 0 warning | planned | CI does not run `typecheck`; no lint script; no husky |
 | Deps / secrets | G2 osv-scanner + gitleaks | planned | CI uses `test-job.yml`, not quality.yml security |
-| Test isolation | D1 per-run local state | planned | L3 uses local Vite :5188; no persist-to/marker |
+| Test isolation | D1 Playwright local Vite :5188; SQLite marker | N/A | No database. CI `storageState` only seeds `dreamro.preferences.v1` in origin 5188. No remote baseURL |
 | Bundler output | `npm run build` + wrangler dry-run | enforced | CI `pre-command` |
 | Docs | update gameplay/deploy docs if behavior changed | manual | human review |
 | Release | version + Worker deploy | enforced | `.github/workflows/release.yml` after green CI |
 
-No local hooks. `--no-verify` is forbidden where hooks exist.
+No husky. Target (unmeasured): pre-commit G1+L1 on index snapshot <30s; pre-push L2+G2 on stdin refs <3min. `--no-verify` forbidden.
 
 ## Resources / Isolation
 
