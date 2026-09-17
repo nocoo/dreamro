@@ -7,13 +7,13 @@ import { getJob } from '../data/jobs';
 export type MapId = 0 | 1 | 2;
 export interface MapInfo {
   id: MapId; name: string; en: string; subtitle: string; level: string; sky: string;
-  grass: string; leaf: string; water: string; accent: string; npcName: string; npcJob: string;
+  grass: string; leaf: string; water: string; npcName: string; npcJob: string;
   mobName: string; mobColor: string; mobHp: number; mobAttack: number; mobXp: number;
 }
 export const MAPS: MapInfo[] = [
-  { id: 0, name: '晨曦山谷', en: 'Dawnlight Valley', subtitle: '风带来了青草的味道，也带来了新的故事。', level: 'Lv. 1 — 5', sky: '#d9e8db', grass: '#a4bb75', leaf: '#739b59', water: '#7ac6c0', accent: '#d8b56e', npcName: '莉露', npcJob: 'acolyte', mobName: '软糖波利', mobColor: '#f2a8b5', mobHp: 52, mobAttack: 11, mobXp: 22 },
-  { id: 1, name: '萤语森林', en: 'Whispering Woods', subtitle: '跟随萤火的微光，听一听森林的心事。', level: 'Lv. 4 — 9', sky: '#c7dedd', grass: '#8cab89', leaf: '#567f75', water: '#7bbac8', accent: '#b0ace2', npcName: '菲恩', npcJob: 'hunter', mobName: '露珠波利', mobColor: '#9bcdbb', mobHp: 112, mobAttack: 17, mobXp: 38 },
-  { id: 2, name: '星落遗迹', en: 'Starfall Sanctuary', subtitle: '旧日的星光，仍在等待一位勇敢的旅人。', level: 'Lv. 7 — 12', sky: '#e9e0d4', grass: '#b7bb87', leaf: '#a49a8a', water: '#a7bbd4', accent: '#d7ad78', npcName: '星语者', npcJob: 'sage', mobName: '星光波利', mobColor: '#c7b3de', mobHp: 160, mobAttack: 21, mobXp: 50 },
+  { id: 0, name: '晨曦山谷', en: 'Dawnlight Valley', subtitle: '风带来了青草的味道，也带来了新的故事。', level: 'Lv. 1 — 5', sky: '#d9e8db', grass: '#a4bb75', leaf: '#739b59', water: '#7ac6c0', npcName: '莉露', npcJob: 'acolyte', mobName: '软糖波利', mobColor: '#f2a8b5', mobHp: 52, mobAttack: 11, mobXp: 22 },
+  { id: 1, name: '萤语森林', en: 'Whispering Woods', subtitle: '跟随萤火的微光，听一听森林的心事。', level: 'Lv. 4 — 9', sky: '#c7dedd', grass: '#8cab89', leaf: '#567f75', water: '#7bbac8', npcName: '菲恩', npcJob: 'hunter', mobName: '露珠波利', mobColor: '#9bcdbb', mobHp: 112, mobAttack: 17, mobXp: 38 },
+  { id: 2, name: '星落遗迹', en: 'Starfall Sanctuary', subtitle: '旧日的星光，仍在等待一位勇敢的旅人。', level: 'Lv. 7 — 12', sky: '#e9e0d4', grass: '#b7bb87', leaf: '#a49a8a', water: '#a7bbd4', npcName: '星语者', npcJob: 'sage', mobName: '星光波利', mobColor: '#c7b3de', mobHp: 160, mobAttack: 21, mobXp: 50 },
 ];
 export interface Obstacle { x: number; z: number; radius: number }
 export interface Portal { group: THREE.Group; x: number; z: number; to: MapId; north: boolean }
