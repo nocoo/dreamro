@@ -2,7 +2,7 @@
 
 Browser single-player RO-style RPG (character, maps, combat) on Three.js.
 Profile: ts-worker-web
-Direction: [docs/gameplay.md](docs/gameplay.md). Frameworks must not rewrite this file.
+Human overview: [README.md](README.md). Direction: [docs/gameplay.md](docs/gameplay.md). Frameworks must not rewrite this file. Maintain this root `AGENTS.md` as the only project handbook; do not create a `CLAUDE.md` alias, copy or import.
 
 ## Sources of Truth
 
@@ -61,21 +61,21 @@ There is no `lint` or `test:coverage` script.
 ## Verification
 
 Status: `enforced` | `planned` | `manual` | `N/A`.
-6DQ = L1/L2/L3 + G1/G2 + D1. Required L1 bar is statements/branches/functions/lines each ≥95%; no skipped or focused tests.
+6DQ = L1/L2/L3 + G2 + D1; the former G1 dimension was merged into L1 on 2026-09-21. Required L1 bar is statements/branches/functions/lines each ≥95%; no skipped or focused tests; plus check-only strict types and lint with zero errors and warnings.
 
 | Change | Proof | Status | Evidence |
 |---|---|---|---|
 | Logic | L1 unit coverage ≥ 95% four metrics | planned | no Vitest/unit suite or coverage config; `npm test` is Playwright |
+| Types / lint (L1 static) | 0 error, 0 warning | planned | CI does not run `typecheck`; no lint script; no husky |
 | API / schema | L2 real HTTP 100% surface | planned | Worker surface is `/api/live` only; no real-HTTP API tests |
 | UI path | L3 Playwright | enforced | CI `command: npm test` after build + wrangler dry-run |
-| Types / lint | G1 0 error, 0 warning | planned | CI does not run `typecheck`; no lint script; no husky |
 | Deps / secrets | G2 osv-scanner + gitleaks | planned | CI uses `test-job.yml`, not quality.yml security |
 | Test isolation | D1 fresh browser state on the local test server | planned | Playwright isolates contexts and seeds synthetic CI preferences at loopback :5188. Outside CI, `reuseExistingServer` may reuse the daily server; explicit test-server ownership remains a gap. SQLite/`_test_marker` are N/A because there is no database |
 | Bundler output | `npm run build` + wrangler dry-run | enforced | CI `pre-command` |
 | Docs | update gameplay/deploy docs if behavior changed | manual | human review |
 | Release | version + Worker deploy | enforced | `.github/workflows/release.yml` after green CI |
 
-No husky. Target (unmeasured): pre-commit G1+L1 on index snapshot <30s; pre-push L2+G2 on stdin refs <3min. `--no-verify` forbidden.
+No husky. Target (unmeasured): pre-commit unified L1 (types, check-only lint, coverage) on index snapshot <30s; pre-push L2+G2 on stdin refs <3min. `--no-verify` forbidden.
 
 ## Resources / Isolation
 
